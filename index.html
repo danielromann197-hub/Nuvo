@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NÜVO | Crecimiento Creativo.</title>
+    <meta name="description" content="Creamos marcas que la gente recuerda. Branding, contenido, sitios web y publicidad diseñados para ayudar a empresas ambiciosas a crecer.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,900&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    
+    <!-- Internal styles specifically for this structure to speed up layouts -->
+    <style>
+        /* Header Logo */
+        .header-logo {
+            font-family: var(--font-heading);
+            font-size: 1.75rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero h1 {
+            margin-bottom: var(--space-md);
+            max-width: 16ch;
+            margin-inline: auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero p {
+            margin-bottom: var(--space-lg);
+            margin-inline: auto;
+            font-size: clamp(1.125rem, 2vw, 1.35rem);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: var(--space-sm);
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Services Icon */
+        .services-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-full);
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-md);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            color: #6C63FF;
+        }
+
+        /* Work Section */
+        .work-grid {
+            display: grid;
+            gap: var(--space-md);
+            grid-template-columns: 1fr;
+        }
+        
+        @media (min-width: 768px) {
+            .work-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .work-item {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 4/3;
+            cursor: pointer;
+        }
+        
+        .work-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-slow);
+        }
+        
+        .work-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .work-caption {
+            position: absolute;
+            bottom: var(--space-md);
+            left: var(--space-md);
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Process Section */
+        .process-steps {
+            display: grid;
+            gap: var(--space-lg);
+            grid-template-columns: 1fr;
+            margin-top: var(--space-xl);
+            position: relative;
+        }
+        
+        @media (min-width: 768px) {
+            .process-steps {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .process-steps::before {
+                content: '';
+                position: absolute;
+                top: 40px;
+                left: 10%;
+                right: 10%;
+                height: 2px;
+                background: var(--border-color);
+                z-index: 0;
+            }
+        }
+        
+        .step-item {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-strong);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            margin: 0 auto var(--space-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* About Section */
+        .about-image {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Insights */
+        .insight-card {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+        
+        .insight-img-wrapper {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            aspect-ratio: 16/10;
+        }
+        
+        .insight-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-normal);
+        }
+        
+        .insight-card:hover .insight-img-wrapper img {
+            transform: scale(1.05);
+        }
+        
+        .insight-category {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-support);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Final CTA */
+        .final-cta {
+            background: var(--bg-secondary);
+            text-align: center;
+            padding: var(--space-2xl) 0;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            margin-top: var(--space-xl);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .final-cta h2 {
+            max-width: 15ch;
+            margin-inline: auto;
+            margin-bottom: var(--space-lg);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-primary);
+            padding-top: var(--space-xl);
+            padding-bottom: var(--space-md);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+        
+        @media (max-width: 768px) {
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .footer-brand {
+                grid-column: span 2;
+            }
+        }
+        
+        .footer h4 {
+            font-family: var(--font-body);
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+            font-size: 1rem;
+        }
+        
+        .footer ul {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+        
+        .footer a {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        .footer a:hover {
+            color: var(--text-primary);
+        }
+        
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="container flex justify-between items-center">
+            <div class="logo">
+                <a href="#" class="header-logo">
+                    <img src="Imagenes/Logo NÜVO.png" alt="NÜVO Logo" style="height: 72px; width: auto;">
+                </a>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="redes.html" class="nav-link" style="text-transform: uppercase; font-weight: 600;">Redes</a>
+                <a href="paginas-web.html" class="nav-link" style="text-transform: uppercase; font-weight: 600;">Páginas Web</a>
+                <a href="ecommerce.html" class="nav-link" style="text-transform: uppercase; font-weight: 600;">E-Commerce</a>
+            </nav>
+            
+            <div class="header-cta">
+                <a href="contacto.html" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.9rem; text-transform: uppercase; font-weight: 700;">Contacto</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div class="bg-shape bg-shape-1"></div>
+            <div class="bg-shape bg-shape-2"></div>
+            
+            <div class="container">
+                <h1 class="reveal-up">Creamos marcas que la gente recuerda.</h1>
+                <p class="reveal-up delay-200">Branding, contenido, sitios web y publicidad diseñados para ayudar a empresas ambiciosas a crecer.</p>
+                <div class="hero-buttons reveal-up delay-400">
+                    <a href="contacto.html" class="btn btn-primary">Inicia tu Proyecto</a>
+                    <a href="#work" class="btn btn-secondary">Explorar Trabajo</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICES SECTION -->
+        <section id="services">
+            <div class="container">
+                <div class="text-center reveal-up" style="margin-bottom: var(--space-xl);">
+                    <span class="tag" style="margin-bottom: var(--space-sm);">Capacidades</span>
+                    <h2>Lo que hacemos.</h2>
+                </div>
+                
+                <div class="services-grid">
+                    <a href="redes.html" class="card reveal-up delay-100" id="redes" style="text-decoration: none; color: inherit; display: block;">
+                        <div class="services-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        </div>
+                        <h3>REDES</h3>
+                        <p style="margin-top: var(--space-xs); font-size: 0.95rem;">Estrategia y gestión de redes sociales para conectar y crear comunidades leales alrededor de tu marca.</p>
+                    </a>
+                    
+                    <a href="paginas-web.html" class="card reveal-up delay-200" id="paginas-web" style="text-decoration: none; color: inherit; display: block;">
+                        <div class="services-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                        </div>
+                        <h3>PÁGINAS WEB</h3>
+                        <p style="margin-top: var(--space-xs); font-size: 0.95rem;">Sitios web premium y de alto rendimiento construidos como productos de clase mundial.</p>
+                    </a>
+                    
+                    <a href="ecommerce.html" class="card reveal-up delay-300" id="ecommerce" style="text-decoration: none; color: inherit; display: block;">
+                        <div class="services-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                        </div>
+                        <h3>E-COMMERCE</h3>
+                        <p style="margin-top: var(--space-xs); font-size: 0.95rem;">Tiendas en línea optimizadas para la conversión que escalan tus ventas a nivel global.</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- WORK SECTION -->
+        <section id="work" style="background: var(--bg-secondary); padding: var(--space-xl) 0;">
+            <div class="container">
+                <div class="flex justify-between items-end reveal-up" style="margin-bottom: var(--space-xl);">
+                    <div>
+                        <span class="tag" style="margin-bottom: var(--space-sm);">Portafolio</span>
+                        <h2>Trabajos seleccionados.</h2>
+                    </div>
+                </div>
+                
+                <div class="work-grid">
+                    <div class="work-item reveal-scale delay-100">
+                        <img src="https://images.unsplash.com/photo-1618761714954-0b8cd0026356?auto=format&fit=crop&q=80&w=1000" alt="App Design">
+                        <div class="work-caption">Lumiere — Identidad de Marca</div>
+                    </div>
+                    
+                    <div class="work-item reveal-scale delay-200">
+                        <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80&w=1000" alt="Packaging">
+                        <div class="work-caption">Oasis Skincare — Diseño Web</div>
+                    </div>
+                    
+                    <div class="work-item reveal-scale delay-100">
+                        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=1000" alt="Digital Platform">
+                        <div class="work-caption">Fintech UI — Diseño de Producto</div>
+                    </div>
+
+                    <div class="work-item reveal-scale delay-200">
+                        <img src="https://images.unsplash.com/photo-1498049860654-af1a5c566876?auto=format&fit=crop&q=80&w=1000" alt="Workspace">
+                        <div class="work-caption">Kinetik — Estrategia y Medios</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROCESS SECTION -->
+        <section id="process">
+            <div class="container">
+                <div class="text-center reveal-up">
+                    <span class="tag" style="margin-bottom: var(--space-sm);">Metodología</span>
+                    <h2>Cómo lo hacemos.</h2>
+                </div>
+                
+                <div class="process-steps">
+                    <div class="step-item reveal-up delay-100">
+                        <div class="step-number">1</div>
+                        <h3>Pensar</h3>
+                        <p style="margin-top: var(--space-xs); font-size: 0.95rem; margin-inline: auto;">Descubrimos insights, definimos la estrategia y trazamos el plan para el éxito.</p>
+                    </div>
+                    
+                    <div class="step-item reveal-up delay-200">
+                        <div class="step-number">2</div>
+                        <h3>Crear</h3>
+                        <p style="margin-top: var(--space-xs); font-size: 0.95rem; margin-inline: auto;">Diseñamos interfaces hermosas, creamos narrativas atractivas y construimos sistemas robustos.</p>
+                    </div>
+                    
+                    <div class="step-item reveal-up delay-300">
+                        <div class="step-number">3</div>
+                        <h3>Crecer</h3>
+                        <p style="margin-top: var(--space-xs); font-size: 0.95rem; margin-inline: auto;">Lanzamos, medimos, iteramos y escalamos tu marca a nuevas alturas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT SECTION -->
+        <section id="about" style="padding: var(--space-xl) 0;">
+            <div class="container">
+                <div class="grid grid-2 items-center gap-lg">
+                    <div class="reveal-up">
+                        <span class="tag" style="margin-bottom: var(--space-sm);">Sobre NÜVO</span>
+                        <h2>La creatividad se encuentra con el impacto empresarial.</h2>
+                        <p style="margin-top: var(--space-md);">Somos un colectivo de diseñadores, estrategas y tecnólogos que creemos que las mejores marcas se construyen en la intersección de una estética impresionante y un rendimiento medible.</p>
+                        <p style="margin-top: var(--space-sm);">No usamos jerga corporativa. Simplemente hacemos un gran trabajo que ayuda a empresas amigables y ambiciosas a destacar y crecer en un panorama digital saturado.</p>
+                    </div>
+                    <div class="about-image reveal-scale delay-200">
+                        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1000" alt="Team Collaboration">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INSIGHTS SECTION -->
+        <section id="blog" style="background: var(--bg-secondary); padding: var(--space-xl) 0;">
+            <div class="container">
+                <div class="reveal-up" style="margin-bottom: var(--space-xl);">
+                    <span class="tag" style="margin-bottom: var(--space-sm);">Publicaciones</span>
+                    <h2>Últimos pensamientos.</h2>
+                </div>
+                
+                <div class="grid grid-3">
+                    <a href="#" class="insight-card reveal-up delay-100">
+                        <div class="insight-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&q=80&w=800" alt="Design">
+                        </div>
+                        <div class="insight-category">Diseño</div>
+                        <h3 style="font-size: 1.25rem;">Por qué la simplicidad escala mejor.</h3>
+                    </a>
+                    
+                    <a href="#" class="insight-card reveal-up delay-200">
+                        <div class="insight-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800" alt="Strategy">
+                        </div>
+                        <div class="insight-category">Estrategia</div>
+                        <h3 style="font-size: 1.25rem;">Construyendo marcas en la era de la IA.</h3>
+                    </a>
+                    
+                    <a href="#" class="insight-card reveal-up delay-300">
+                        <div class="insight-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1542744094-3a31f272c490?auto=format&fit=crop&q=80&w=800" alt="Growth">
+                        </div>
+                        <div class="insight-category">Crecimiento</div>
+                        <h3 style="font-size: 1.25rem;">Las métricas que realmente importan.</h3>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- FINAL CTA SECTION -->
+        <section class="final-cta" id="contact">
+            <div class="bg-shape bg-shape-1" style="top: -200px; left: auto; right: -100px; opacity: 0.2;"></div>
+            <div class="container">
+                <h2 class="reveal-up">Construyamos tu próxima gran idea.</h2>
+                <div class="hero-buttons reveal-up delay-200">
+                    <button class="btn btn-primary">Agenda una Llamada</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo" style="margin-bottom: var(--space-sm);">
+                    <img src="Imagenes/Logo NÜVO.png" alt="NÜVO Logo" style="height: 72px; width: auto;">
+                </div>
+                    <p style="font-size: 0.95rem;">Crecimiento Creativo.</p>
+                </div>
+                
+                <div>
+                    <h4>Servicios</h4>
+                    <ul>
+                        <li><a href="redes.html">Redes</a></li>
+                        <li><a href="paginas-web.html">Páginas Web</a></li>
+                        <li><a href="ecommerce.html">E-Commerce</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4>Compañía</h4>
+                    <ul>
+                        <li><a href="#work">Trabajo</a></li>
+                        <li><a href="#about">Nosotros</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4>Social</h4>
+                    <ul>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="#">Twitter</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div>&copy; 2026 Agencia NÜVO. Todos los derechos reservados.</div>
+                <div style="display: flex; gap: var(--space-md);">
+                    <a href="#">Privacidad</a>
+                    <a href="#">Términos</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script src="js/main.js"></script>
+</body>
+</html>

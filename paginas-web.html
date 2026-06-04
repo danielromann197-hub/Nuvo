@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NÜVO | Sitios Web Que Funcionan</title>
+    <meta name="description" content="Diseño y desarrollo de sitios web premium orientados al crecimiento comercial.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/redes.css">
+    
+    <style>
+        .process-grid-new {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-lg);
+            margin-top: var(--space-lg);
+            border-top: 1px solid var(--border-color);
+            padding-top: var(--space-lg);
+        }
+        
+        @media (max-width: 992px) {
+            .process-grid-new {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .process-grid-new {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .process-step-new h4 {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .process-step-new p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .process-number {
+            font-family: var(--font-headings);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6C63FF;
+            margin-bottom: var(--space-sm);
+            display: block;
+        }
+
+        .cta-section {
+            background-color: var(--bg-secondary);
+            border-radius: 24px;
+            padding: var(--space-2xl) var(--space-xl);
+            text-align: center;
+            margin: var(--space-lg) 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- HEADER -->
+    <header class="header">
+        <div class="container flex justify-between items-center">
+            <div class="logo">
+                <a href="index.html" class="header-logo">
+                    <img src="Imagenes/Logo NÜVO.png" alt="NÜVO Logo" style="height: 72px; width: auto;">
+                </a>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="redes.html" class="nav-link" style="text-transform: uppercase; font-weight: 600;">Redes</a>
+                <a href="paginas-web.html" class="nav-link" style="text-transform: uppercase; font-weight: 600;">Páginas Web</a>
+                <a href="ecommerce.html" class="nav-link" style="text-transform: uppercase; font-weight: 600;">E-Commerce</a>
+            </nav>
+            
+            <div class="header-cta">
+                <a href="contacto.html" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.9rem; text-transform: uppercase; font-weight: 700;">Contacto</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section class="page-header" style="padding-top: 180px; padding-bottom: var(--space-lg);">
+            <div class="container">
+                <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+                    <h1 class="reveal-up" style="font-size: clamp(3.5rem, 8vw, 6rem); margin-bottom: var(--space-md); line-height: 1.1; letter-spacing: -0.02em;">SITIOS WEB QUE FUNCIONAN.</h1>
+                    <p class="reveal-up delay-200" style="font-size: clamp(1.1rem, 3vw, 1.25rem); max-width: 700px; margin: 0 auto; line-height: 1.6;">Creamos experiencias digitales que combinan estrategia, diseño y tecnología para convertir visitantes en clientes.</p>
+                    <div class="hero-buttons reveal-up delay-400" style="margin-top: var(--space-lg);">
+                        <a href="contacto.html" class="btn btn-primary">Inicia tu Proyecto</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STATS SECTION -->
+        <section id="stats" style="padding-top: 0;">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-item reveal-up">
+                        <div class="stat-number">+<span class="counter" data-target="100">0</span></div>
+                        <div class="stat-label">Sitios lanzados</div>
+                    </div>
+                    <div class="stat-item reveal-up delay-200">
+                        <div class="stat-number"><span class="counter" data-target="4.2">0</span>X</div>
+                        <div class="stat-label">Crecimiento Promedio de Conversión</div>
+                    </div>
+                    <div class="stat-item reveal-up delay-400">
+                        <div class="stat-number"><span class="counter" data-target="98">0</span>%</div>
+                        <div class="stat-label">Puntuación de Rendimiento</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PREMIUM SERVICES GRID -->
+        <section id="premium-services" style="padding-top: var(--space-lg); padding-bottom: var(--space-lg);">
+            <div class="container">
+                <div class="premium-services-grid">
+                    
+                    <div class="premium-card">
+                        <h3>LANDING PAGES</h3>
+                        <p>Diseñadas para campañas, lanzamientos y generación de leads altamente cualificados.</p>
+                    </div>
+
+                    <div class="premium-card">
+                        <h3>SITIOS CORPORATIVOS</h3>
+                        <p>Construidos para fortalecer la credibilidad y posicionar marcas profesionalmente en el mercado.</p>
+                    </div>
+
+                    <div class="premium-card">
+                        <h3>E-COMMERCE</h3>
+                        <p>Tiendas online optimizadas para experiencias de compra fluidas y un crecimiento exponencial de ventas.</p>
+                    </div>
+
+                    <div class="premium-card">
+                        <h3>EXPERIENCIAS A MEDIDA</h3>
+                        <p>Soluciones digitales personalizadas diseñadas en torno a objetivos comerciales y operacionales únicos.</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- PROCESS SECTION -->
+        <section style="padding-top: var(--space-lg); padding-bottom: var(--space-lg);">
+            <div class="container">
+                <h2 style="font-size: 2.5rem; letter-spacing: -0.02em;">Nuestro Proceso</h2>
+                
+                <div class="process-grid-new">
+                    <div class="process-step-new reveal-up delay-100">
+                        <span class="process-number">01</span>
+                        <h4>DESCUBRIR</h4>
+                        <p>Entender a fondo el negocio, la audiencia y los objetivos comerciales para trazar la estrategia.</p>
+                    </div>
+                    
+                    <div class="process-step-new reveal-up delay-200">
+                        <span class="process-number">02</span>
+                        <h4>DISEÑAR</h4>
+                        <p>Creación de experiencias de usuario intuitivas y sistemas visuales premium que eleven la marca.</p>
+                    </div>
+                    
+                    <div class="process-step-new reveal-up delay-300">
+                        <span class="process-number">03</span>
+                        <h4>DESARROLLAR</h4>
+                        <p>Construcción de productos digitales ultrarrápidos, escalables y perfectamente adaptables a cualquier dispositivo.</p>
+                    </div>
+                    
+                    <div class="process-step-new reveal-up delay-400">
+                        <span class="process-number">04</span>
+                        <h4>CRECER</h4>
+                        <p>Optimización técnica continua enfocada estrictamente en maximizar los resultados de negocio.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FINAL CTA SECTION -->
+        <section style="padding-top: var(--space-xl); padding-bottom: var(--space-lg);">
+            <div class="container">
+                <div class="cta-section reveal-up">
+                    <h2 style="font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: var(--space-sm); letter-spacing: -0.02em;">Tu próximo cliente ya está buscando.</h2>
+                    <p style="font-size: 1.25rem; color: var(--text-secondary); margin-bottom: var(--space-lg); max-width: 600px; margin-left: auto; margin-right: auto;">Construyamos una experiencia digital diseñada para hacer crecer tu negocio.</p>
+                    <a href="contacto.html" class="btn btn-primary" style="padding: 1rem 2.5rem; font-size: 1.1rem; text-transform: uppercase; font-weight: 700;">Hablemos</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo" style="margin-bottom: var(--space-sm);">
+                    <img src="Imagenes/Logo NÜVO.png" alt="NÜVO Logo" style="height: 72px; width: auto;">
+                </div>
+                    <p style="font-size: 0.95rem;">Crecimiento Creativo.</p>
+                </div>
+                
+                <div>
+                    <h4>Servicios</h4>
+                    <ul>
+                        <li><a href="redes.html">Redes</a></li>
+                        <li><a href="paginas-web.html">Páginas Web</a></li>
+                        <li><a href="ecommerce.html">E-Commerce</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4>Agencia</h4>
+                    <ul>
+                        <li><a href="index.html#work">Portafolio</a></li>
+                        <li><a href="index.html#process">Proceso</a></li>
+                        <li><a href="index.html#blog">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacidad</a></li>
+                        <li><a href="#">Términos</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 NÜVO. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- Page Specific Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Stagger reveal for premium cards
+            const premiumCards = document.querySelectorAll('.premium-card');
+            if (premiumCards.length > 0) {
+                gsap.fromTo(premiumCards, 
+                    { autoAlpha: 0, y: 60 },
+                    { 
+                        autoAlpha: 1, 
+                        y: 0, 
+                        duration: 1, 
+                        stagger: 0.15, 
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: ".premium-services-grid",
+                            start: "top 80%"
+                        }
+                    }
+                );
+            }
+
+            // Stagger reveal for process steps
+            const processSteps = document.querySelectorAll('.process-step-new');
+            if (processSteps.length > 0) {
+                gsap.fromTo(processSteps, 
+                    { autoAlpha: 0, y: 40 },
+                    { 
+                        autoAlpha: 1, 
+                        y: 0, 
+                        duration: 0.8, 
+                        stagger: 0.15, 
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: ".process-grid-new",
+                            start: "top 85%"
+                        }
+                    }
+                );
+            }
+
+            // Number Counter Animation for Stats
+            const counters = document.querySelectorAll('.counter');
+            if (counters.length > 0) {
+                gsap.fromTo('.stat-item', 
+                    { autoAlpha: 0, y: 30 },
+                    { 
+                        autoAlpha: 1, 
+                        y: 0, 
+                        duration: 1, 
+                        stagger: 0.2, 
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: ".stats-grid",
+                            start: "top 85%"
+                        }
+                    }
+                );
+
+                counters.forEach(counter => {
+                    const target = parseFloat(counter.getAttribute('data-target'));
+                    const obj = { val: 0 };
+                    
+                    gsap.to(obj, {
+                        val: target,
+                        duration: 2,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: ".stats-grid",
+                            start: "top 85%"
+                        },
+                        onUpdate: function() {
+                            if (target % 1 !== 0) {
+                                counter.innerHTML = obj.val.toFixed(1);
+                            } else {
+                                counter.innerHTML = Math.floor(obj.val);
+                            }
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
