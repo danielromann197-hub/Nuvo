@@ -123,15 +123,7 @@
     z-index: 999;
   }
 
-  /* Dark mode support if applicable */
-  @media (prefers-color-scheme: dark) {
-    .nav-links {
-      background: rgba(17, 17, 17, 0.98);
-    }
-    .mobile-menu-btn span {
-      background-color: #ffffff;
-    }
-  }
+
   
   .nav-links.active {
     opacity: 1;
