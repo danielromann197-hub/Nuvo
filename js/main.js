@@ -7,7 +7,38 @@ document.addEventListener('DOMContentLoaded', () => {
   initParallax();
   initStaggerReveals();
   initProcessPinning();
+  initMobileMenu();
 });
+
+function initMobileMenu() {
+  const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+  const navLinks = document.querySelector('.nav-links');
+  const navLinksItems = document.querySelectorAll('.nav-link');
+
+  if (!mobileMenuBtn || !navLinks) return;
+
+  // Toggle menu open/close
+  mobileMenuBtn.addEventListener('click', () => {
+    mobileMenuBtn.classList.toggle('active');
+    navLinks.classList.toggle('active');
+    
+    // Prevent scrolling when menu is open
+    if (navLinks.classList.contains('active')) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Close menu when clicking on a link
+  navLinksItems.forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenuBtn.classList.remove('active');
+      navLinks.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  });
+}
 
 function initHeaderScroll() {
   const header = document.querySelector('.header');
