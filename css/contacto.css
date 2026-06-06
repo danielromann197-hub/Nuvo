@@ -17,7 +17,7 @@
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
-    padding: var(--space-xl);
+    padding: clamp(var(--space-md), 5vw, var(--space-xl));
     text-align: center;
     transition: all var(--transition-normal);
     display: flex;
@@ -92,7 +92,7 @@
 .contact-final-cta {
     background-color: var(--bg-secondary);
     border-radius: var(--radius-lg);
-    padding: var(--space-2xl) var(--space-xl);
+    padding: clamp(var(--space-lg), 8vw, var(--space-2xl)) clamp(var(--space-sm), 5vw, var(--space-xl));
     text-align: center;
 }
 
