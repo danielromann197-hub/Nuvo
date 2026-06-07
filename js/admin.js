@@ -1,63 +1,108 @@
 /**
  * NÜVO Admin Dashboard Application
- * Uses LocalStorage for MVP Database
+ * Uses Supabase (PostgreSQL) for Database
  */
+
+const supabaseUrl = 'https://pgsmwsuwapjajszhwaps.supabase.co';
+const supabaseKey = 'sb_publishable_O6sgosXbiPAiCvmtsCdB0A_tHg-YgI8';
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 const adminApp = {
     db: {
-        users: [{ id: 1, username: 'admin', password: '123', role: 'Administrador' }],
+        users: [],
         clients: [],
         accounts: []
     },
     currentUser: null,
 
-    init() {
-        this.loadData();
-        this.checkAuth();
+    async init() {
         this.bindEvents();
+        await this.checkAuth();
     },
 
-    loadData() {
-        const storedUsers = localStorage.getItem('nuvo_users');
-        const storedClients = localStorage.getItem('nuvo_clients');
-        const storedAccounts = localStorage.getItem('nuvo_accounts');
+    async loadData() {
+        try {
+            const [usersRes, clientsRes, accountsRes] = await Promise.all([
+                supabase.from('users').select('*').order('id', { ascending: false }),
+                supabase.from('clients').select('*').order('id', { ascending: false }),
+                supabase.from('accounts').select('*').order('id', { ascending: false })
+            ]);
 
-        if (storedUsers) this.db.users = JSON.parse(storedUsers);
-        if (storedClients) this.db.clients = JSON.parse(storedClients);
-        if (storedAccounts) this.db.accounts = JSON.parse(storedAccounts);
+            if (usersRes.data) this.db.users = usersRes.data;
+            if (clientsRes.data) this.db.clients = clientsRes.data;
+            if (accountsRes.data) this.db.accounts = accountsRes.data;
+        } catch (error) {
+            console.error("Error loading data:", error);
+            alert("Error al cargar los datos. Verifica tu conexión.");
+        }
     },
 
-    saveData() {
-        localStorage.setItem('nuvo_users', JSON.stringify(this.db.users));
-        localStorage.setItem('nuvo_clients', JSON.stringify(this.db.clients));
-        localStorage.setItem('nuvo_accounts', JSON.stringify(this.db.accounts));
-    },
-
-    checkAuth() {
+    async checkAuth() {
         const sessionUser = sessionStorage.getItem('nuvo_auth');
         if (sessionUser) {
             this.currentUser = JSON.parse(sessionUser);
             this.showDashboard();
+            
+            // Show loading indicator in dashboard
+            document.getElementById('current-username').innerText = "Cargando...";
+            
+            // Fetch all data from Supabase
+            await this.loadData();
+            
+            // Update UI
+            this.updateDashboardUser();
+            this.renderAll();
         } else {
             this.showLogin();
         }
     },
 
+    updateDashboardUser() {
+        document.getElementById('current-username').innerText = this.currentUser.username;
+        document.getElementById('current-user-avatar').innerText = this.currentUser.username.charAt(0).toUpperCase();
+    },
+
     bindEvents() {
         // Login Form
-        document.getElementById('login-form')?.addEventListener('submit', (e) => {
+        document.getElementById('login-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerText;
+            btn.innerText = 'Validando...';
+            btn.disabled = true;
+
             const u = document.getElementById('username').value;
             const p = document.getElementById('password').value;
             
-            const user = this.db.users.find(x => x.username === u && x.password === p);
-            if (user) {
-                sessionStorage.setItem('nuvo_auth', JSON.stringify(user));
-                this.currentUser = user;
-                document.getElementById('login-form').reset();
-                this.showDashboard();
-            } else {
+            try {
+                // Query Supabase for user
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('username', u)
+                    .eq('password', p)
+                    .single();
+
+                if (data) {
+                    sessionStorage.setItem('nuvo_auth', JSON.stringify(data));
+                    this.currentUser = data;
+                    document.getElementById('login-form').reset();
+                    document.getElementById('login-error').innerText = "";
+                    this.showDashboard();
+                    
+                    document.getElementById('current-username').innerText = "Cargando...";
+                    await this.loadData();
+                    this.updateDashboardUser();
+                    this.renderAll();
+                } else {
+                    document.getElementById('login-error').innerText = "Usuario o contraseña incorrectos.";
+                }
+            } catch (err) {
+                console.error(err);
                 document.getElementById('login-error').innerText = "Usuario o contraseña incorrectos.";
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
             }
         });
 
@@ -85,12 +130,6 @@ const adminApp = {
     showDashboard() {
         document.getElementById('login-screen').classList.remove('active');
         document.getElementById('dashboard-screen').classList.add('active');
-        
-        // Update user info
-        document.getElementById('current-username').innerText = this.currentUser.username;
-        document.getElementById('current-user-avatar').innerText = this.currentUser.username.charAt(0).toUpperCase();
-
-        this.renderAll();
     },
 
     switchView(viewId) {
@@ -162,7 +201,7 @@ const adminApp = {
             tbody.innerHTML += `
                 <tr>
                     <td><strong>${a.concept}</strong></td>
-                    <td>${a.client || '-'}</td>
+                    <td>${a.client_name || '-'}</td>
                     <td>$${parseFloat(a.amount).toLocaleString()}</td>
                     <td>${a.date}</td>
                     <td>
@@ -207,79 +246,167 @@ const adminApp = {
     },
 
     // CRUD Clients
-    saveClient(e) {
+    async saveClient(e) {
         e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalText = btn.innerText;
+        btn.innerText = 'Guardando...';
+        btn.disabled = true;
+
         const name = document.getElementById('client-name').value;
         const service = document.getElementById('client-service').value;
         const status = document.getElementById('client-status').value;
 
-        this.db.clients.push({ id: Date.now(), name, service, status });
-        this.saveData();
-        this.renderAll();
-        
-        document.getElementById('form-client').reset();
-        this.closeModal('modal-client');
+        try {
+            const { data, error } = await supabase
+                .from('clients')
+                .insert([{ name, service, status }])
+                .select();
+                
+            if (error) throw error;
+            
+            // Add to local array and re-render
+            if (data && data.length > 0) {
+                this.db.clients.unshift(data[0]); // Add to beginning
+                this.renderAll();
+            }
+            
+            document.getElementById('form-client').reset();
+            this.closeModal('modal-client');
+        } catch (err) {
+            console.error(err);
+            alert("Error al guardar cliente");
+        } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
     },
     
-    deleteClient(id) {
-        if(confirm("¿Eliminar cliente?")) {
-            this.db.clients = this.db.clients.filter(c => c.id !== id);
-            this.saveData();
-            this.renderAll();
+    async deleteClient(id) {
+        if(confirm("¿Eliminar cliente permanentemente?")) {
+            try {
+                const { error } = await supabase.from('clients').delete().eq('id', id);
+                if (error) throw error;
+                
+                this.db.clients = this.db.clients.filter(c => c.id !== id);
+                this.renderAll();
+            } catch (err) {
+                console.error(err);
+                alert("Error al eliminar cliente");
+            }
         }
     },
 
     // CRUD Accounts
-    saveAccount(e) {
+    async saveAccount(e) {
         e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalText = btn.innerText;
+        btn.innerText = 'Guardando...';
+        btn.disabled = true;
+
         const concept = document.getElementById('account-concept').value;
-        const amount = document.getElementById('account-amount').value;
-        const client = document.getElementById('account-client').value;
+        const amount = parseFloat(document.getElementById('account-amount').value);
+        const client_name = document.getElementById('account-client').value || null;
         
         const d = new Date();
         const date = `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
 
-        this.db.accounts.push({ id: Date.now(), concept, amount, client, date });
-        this.saveData();
-        this.renderAll();
-        
-        document.getElementById('form-account').reset();
-        this.closeModal('modal-account');
+        try {
+            const { data, error } = await supabase
+                .from('accounts')
+                .insert([{ concept, amount, client_name, date }])
+                .select();
+                
+            if (error) throw error;
+            
+            if (data && data.length > 0) {
+                this.db.accounts.unshift(data[0]);
+                this.renderAll();
+            }
+            
+            document.getElementById('form-account').reset();
+            this.closeModal('modal-account');
+        } catch (err) {
+            console.error(err);
+            alert("Error al guardar cuenta");
+        } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
     },
 
-    deleteAccount(id) {
-        if(confirm("¿Eliminar registro?")) {
-            this.db.accounts = this.db.accounts.filter(a => a.id !== id);
-            this.saveData();
-            this.renderAll();
+    async deleteAccount(id) {
+        if(confirm("¿Eliminar registro permanentemente?")) {
+            try {
+                const { error } = await supabase.from('accounts').delete().eq('id', id);
+                if (error) throw error;
+                
+                this.db.accounts = this.db.accounts.filter(a => a.id !== id);
+                this.renderAll();
+            } catch (err) {
+                console.error(err);
+                alert("Error al eliminar registro");
+            }
         }
     },
 
     // CRUD Users
-    saveUser(e) {
+    async saveUser(e) {
         e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalText = btn.innerText;
+        btn.innerText = 'Guardando...';
+        btn.disabled = true;
+
         const username = document.getElementById('user-username').value;
         const password = document.getElementById('user-password').value;
         const role = document.getElementById('user-role').value;
 
+        // Check if exists locally first
         if(this.db.users.find(u => u.username === username)) {
             alert("El usuario ya existe");
+            btn.innerText = originalText;
+            btn.disabled = false;
             return;
         }
 
-        this.db.users.push({ id: Date.now(), username, password, role });
-        this.saveData();
-        this.renderAll();
-        
-        document.getElementById('form-user').reset();
-        this.closeModal('modal-user');
+        try {
+            const { data, error } = await supabase
+                .from('users')
+                .insert([{ username, password, role }])
+                .select();
+                
+            if (error) throw error;
+            
+            if (data && data.length > 0) {
+                this.db.users.unshift(data[0]);
+                this.renderAll();
+            }
+            
+            document.getElementById('form-user').reset();
+            this.closeModal('modal-user');
+        } catch (err) {
+            console.error(err);
+            alert("Error al crear usuario. Revisa que el nombre de usuario sea único.");
+        } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
     },
 
-    deleteUser(id) {
-        if(confirm("¿Eliminar usuario?")) {
-            this.db.users = this.db.users.filter(u => u.id !== id);
-            this.saveData();
-            this.renderAll();
+    async deleteUser(id) {
+        if(confirm("¿Eliminar usuario permanentemente?")) {
+            try {
+                const { error } = await supabase.from('users').delete().eq('id', id);
+                if (error) throw error;
+                
+                this.db.users = this.db.users.filter(u => u.id !== id);
+                this.renderAll();
+            } catch (err) {
+                console.error(err);
+                alert("Error al eliminar usuario");
+            }
         }
     }
 };
