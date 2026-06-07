@@ -27,7 +27,7 @@ body.admin-body {
 
 .login-container {
     background: var(--bg-primary);
-    padding: var(--space-xl);
+    padding: clamp(var(--space-md), 5vw, var(--space-lg));
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
     width: 100%;
