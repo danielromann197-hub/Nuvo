@@ -43,6 +43,8 @@ body.admin-body {
 .login-container h2 {
     margin-bottom: var(--space-xs);
     font-family: var(--font-heading);
+    font-size: 1.8rem;
+    line-height: 1.2;
 }
 
 .login-container p {
