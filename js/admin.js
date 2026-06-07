@@ -71,8 +71,8 @@ const adminApp = {
             btn.innerText = 'Validando...';
             btn.disabled = true;
 
-            const u = document.getElementById('username').value;
-            const p = document.getElementById('password').value;
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value.trim();
             
             try {
                 // Query Supabase for user
@@ -82,6 +82,12 @@ const adminApp = {
                     .eq('username', u)
                     .eq('password', p)
                     .single();
+
+                if (error) {
+                    console.error("Supabase Error:", error);
+                    alert("Error en base de datos: " + error.message);
+                    throw error;
+                }
 
                 if (data) {
                     sessionStorage.setItem('nuvo_auth', JSON.stringify(data));
