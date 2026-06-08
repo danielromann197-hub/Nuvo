@@ -227,24 +227,22 @@ body.admin-body {
     font-size: 0.75rem;
 }
 
-.logout-btn {
+.subtle-logout {
     background: transparent;
     border: none;
-    color: var(--text-secondary);
+    color: var(--accent-support);
     cursor: pointer;
-    padding: 8px;
-    border-radius: 4px;
+    padding: 6px 0 0 0;
+    font-size: 0.75rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    text-align: left;
     transition: all 0.2s;
 }
 
-.logout-btn:hover {
-    background: #FEE2E2;
-    color: #EF4444;
-}
-
-.logout-btn svg {
-    width: 18px;
-    height: 18px;
+.subtle-logout:hover {
+    color: #ff4d4d;
+    text-decoration: underline;
 }
 
 /* Main Content Area */

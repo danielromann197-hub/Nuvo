@@ -131,7 +131,7 @@ const adminApp = {
             });
         }
 
-        document.getElementById('logout-btn')?.addEventListener('click', () => {
+        document.getElementById('logout-link')?.addEventListener('click', () => {
             sessionStorage.removeItem('nuvo_auth');
             this.currentUser = null;
             this.showLogin();
