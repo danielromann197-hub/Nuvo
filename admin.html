@@ -74,7 +74,7 @@
                 </button>
                 <button class="nav-item" data-target="view-users">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    Usuarios
+                    Colaboradores
                 </button>
             </nav>
             
@@ -253,22 +253,28 @@
                 </div>
             </div>
 
-            <!-- VIEW: USUARIOS -->
+            <!-- VIEW: USUARIOS (COLABORADORES) -->
             <div id="view-users" class="content-view">
                 <header class="content-header flex-between">
                     <div>
-                        <h1>Usuarios</h1>
-                        <p>Administra los accesos al sistema.</p>
+                        <h1>Gestión de Colaboradores</h1>
+                        <p>Equipo: Añade, edita y gestiona los permisos de los miembros de tu equipo.</p>
                     </div>
-                    <button class="btn btn-primary" onclick="adminApp.openModal('modal-user')">+ Nuevo Usuario</button>
+                    <div style="display: flex; gap: var(--space-sm); align-items: center;">
+                        <div class="filter-group" style="flex: unset; width: 250px; margin-bottom: 0;">
+                            <input type="text" id="filter-user-search" placeholder="🔍 Buscar colaborador..." style="margin-bottom: 0;" oninput="adminApp.renderUsers()">
+                        </div>
+                        <button class="btn btn-primary" onclick="adminApp.openModal('modal-user')">+ Añadir Nuevo Colaborador</button>
+                    </div>
                 </header>
                 
                 <div class="card-glass table-container">
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Usuario</th>
+                                <th>Nombre</th>
                                 <th>Rol</th>
+                                <th>Email</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -365,7 +371,7 @@
     <div class="modal-overlay" id="modal-user">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Agregar Usuario</h3>
+                <h3>Añadir Colaborador</h3>
                 <button class="close-btn" onclick="adminApp.closeModal('modal-user')">&times;</button>
             </div>
             <form id="form-user" onsubmit="adminApp.saveUser(event)">
@@ -374,14 +380,20 @@
                     <input type="text" id="user-username" required>
                 </div>
                 <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="user-email" required placeholder="correo@agencia.com">
+                </div>
+                <div class="form-group">
                     <label>Contraseña</label>
-                    <input type="text" id="user-password" required>
+                    <input type="password" id="user-password" required>
                 </div>
                 <div class="form-group">
                     <label>Rol</label>
                     <select id="user-role" required>
-                        <option value="Administrador">Administrador</option>
-                        <option value="Editor">Editor</option>
+                        <option value="Ejecutor">Ejecutor</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Encargado">Encargado</option>
+                        <option value="Contabilidad">Contabilidad</option>
                     </select>
                 </div>
                 <div class="modal-actions">

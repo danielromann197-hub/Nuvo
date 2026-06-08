@@ -279,12 +279,21 @@ const adminApp = {
         const tbody = document.getElementById('users-table-body');
         if(!tbody) return;
 
+        const term = document.getElementById('filter-user-search')?.value.toLowerCase() || '';
+        const filteredUsers = term ? this.db.users.filter(u => 
+            u.username.toLowerCase().includes(term) || 
+            (u.email && u.email.toLowerCase().includes(term)) ||
+            u.role.toLowerCase().includes(term)
+        ) : this.db.users;
+
         tbody.innerHTML = '';
-        this.db.users.forEach(u => {
+        filteredUsers.forEach(u => {
+            const email = u.email || 'correo@agencia.com';
             tbody.innerHTML += `
                 <tr>
                     <td><strong>${u.username}</strong></td>
                     <td>${u.role}</td>
+                    <td style="color: var(--text-secondary);">${email}</td>
                     <td>
                         ${u.username !== 'admin' ? `
                         <button class="action-btn delete" onclick="adminApp.deleteUser(${u.id})">
@@ -295,6 +304,23 @@ const adminApp = {
                 </tr>
             `;
         });
+
+        // Update Executors in Tasks
+        const taskExecutorSelect = document.getElementById('task-executor');
+        if (taskExecutorSelect) {
+            taskExecutorSelect.innerHTML = '<option value="">Seleccione ejecutor</option>';
+            this.db.users.forEach(u => {
+                taskExecutorSelect.innerHTML += `<option value="${u.username}">${u.username}</option>`;
+            });
+        }
+
+        const filterExecutorSelect = document.getElementById('filter-executor');
+        if (filterExecutorSelect) {
+            filterExecutorSelect.innerHTML = '<option value="">🔍 Todos los Ejecutores</option>';
+            this.db.users.forEach(u => {
+                filterExecutorSelect.innerHTML += `<option value="${u.username}">${u.username}</option>`;
+            });
+        }
     },
 
     openModal(id) {
@@ -417,6 +443,7 @@ const adminApp = {
         btn.disabled = true;
 
         const username = document.getElementById('user-username').value;
+        const email = document.getElementById('user-email').value;
         const password = document.getElementById('user-password').value;
         const role = document.getElementById('user-role').value;
 
@@ -430,7 +457,7 @@ const adminApp = {
         try {
             const { data, error } = await this.supabase
                 .from('users')
-                .insert([{ username, password, role }])
+                .insert([{ username, email, password, role }])
                 .select();
                 
             if (error) throw error;
