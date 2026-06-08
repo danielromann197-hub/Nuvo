@@ -66,7 +66,7 @@
                 </button>
                 <button class="nav-item" data-target="view-accounts">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                    Cuentas
+                    Finanzas
                 </button>
                 <button class="nav-item" data-target="view-users">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
@@ -108,8 +108,8 @@
                         <div class="metric-value" id="metric-revenue">$0</div>
                     </div>
                     <div class="metric-card">
-                        <h3>Cuentas Activas</h3>
-                        <div class="metric-value" id="metric-accounts">0</div>
+                        <h3>Balance General</h3>
+                        <div class="metric-value" id="metric-accounts">$0</div>
                     </div>
                 </div>
                 
@@ -152,11 +152,26 @@
             <div id="view-accounts" class="content-view">
                 <header class="content-header flex-between">
                     <div>
-                        <h1>Cuentas y Pagos</h1>
-                        <p>Control financiero y registro de cuentas.</p>
+                        <h1>Estado Financiero</h1>
+                        <p>Control de ingresos, egresos y balance general.</p>
                     </div>
                     <button class="btn btn-primary" onclick="adminApp.openModal('modal-account')">+ Nuevo Registro</button>
                 </header>
+
+                <div class="metrics-grid" style="margin-bottom: var(--space-xl);">
+                    <div class="metric-card">
+                        <h3>Total Ingresos</h3>
+                        <div class="metric-value" id="finance-income" style="color: #10b981;">$0</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Total Egresos</h3>
+                        <div class="metric-value" id="finance-expense" style="color: #ef4444;">$0</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Balance Neto</h3>
+                        <div class="metric-value" id="finance-balance">$0</div>
+                    </div>
+                </div>
                 
                 <div class="card-glass table-container">
                     <table class="data-table">
@@ -164,6 +179,7 @@
                             <tr>
                                 <th>Concepto</th>
                                 <th>Cliente Asociado</th>
+                                <th>Tipo</th>
                                 <th>Monto</th>
                                 <th>Fecha</th>
                                 <th>Acciones</th>
@@ -255,8 +271,15 @@
             <form id="form-account" onsubmit="adminApp.saveAccount(event)">
                 <input type="hidden" id="account-id">
                 <div class="form-group">
+                    <label>Tipo de Movimiento</label>
+                    <select id="account-type" required>
+                        <option value="Ingreso">Ingreso (+)</option>
+                        <option value="Egreso">Egreso (-)</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label>Concepto</label>
-                    <input type="text" id="account-concept" required placeholder="Ej. Pago Mensual">
+                    <input type="text" id="account-concept" required placeholder="Ej. Pago Mensual o Compra de Dominio">
                 </div>
                 <div class="form-group">
                     <label>Monto ($)</label>

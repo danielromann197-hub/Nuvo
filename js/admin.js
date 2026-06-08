@@ -176,8 +176,11 @@ const adminApp = {
         document.getElementById('metric-clients').innerText = this.db.clients.length;
         document.getElementById('metric-accounts').innerText = this.db.accounts.length;
         
-        const revenue = this.db.accounts.reduce((sum, acc) => sum + parseFloat(acc.amount), 0);
-        document.getElementById('metric-revenue').innerText = `$${revenue.toLocaleString()}`;
+        const ingresos = this.db.accounts.filter(a => a.type !== 'Egreso').reduce((sum, acc) => sum + parseFloat(acc.amount), 0);
+        const egresos = this.db.accounts.filter(a => a.type === 'Egreso').reduce((sum, acc) => sum + parseFloat(acc.amount), 0);
+        const balance = ingresos - egresos;
+        
+        document.getElementById('metric-revenue').innerText = `$${balance.toLocaleString()}`;
     },
 
     renderClients() {
@@ -214,13 +217,30 @@ const adminApp = {
         const tbody = document.getElementById('accounts-table-body');
         if(!tbody) return;
 
+        let ingresos = 0;
+        let egresos = 0;
+
         tbody.innerHTML = '';
         this.db.accounts.forEach(a => {
+            const isEgreso = a.type === 'Egreso';
+            if (isEgreso) {
+                egresos += parseFloat(a.amount);
+            } else {
+                ingresos += parseFloat(a.amount);
+            }
+            
+            const tipoBadge = isEgreso 
+                ? '<span style="color: #ef4444; font-weight: 600;">Egreso</span>' 
+                : '<span style="color: #10b981; font-weight: 600;">Ingreso</span>';
+            const montoColor = isEgreso ? '#ef4444' : '#10b981';
+            const signo = isEgreso ? '-' : '+';
+
             tbody.innerHTML += `
                 <tr>
                     <td><strong>${a.concept}</strong></td>
                     <td>${a.client_name || '-'}</td>
-                    <td>$${parseFloat(a.amount).toLocaleString()}</td>
+                    <td>${tipoBadge}</td>
+                    <td style="color: ${montoColor}; font-weight: 600;">${signo}$${parseFloat(a.amount).toLocaleString()}</td>
                     <td>${a.date}</td>
                     <td>
                         <button class="action-btn delete" onclick="adminApp.deleteAccount(${a.id})">
@@ -230,6 +250,18 @@ const adminApp = {
                 </tr>
             `;
         });
+
+        const fIncome = document.getElementById('finance-income');
+        const fExpense = document.getElementById('finance-expense');
+        const fBalance = document.getElementById('finance-balance');
+
+        if (fIncome) fIncome.innerText = `$${ingresos.toLocaleString()}`;
+        if (fExpense) fExpense.innerText = `$${egresos.toLocaleString()}`;
+        if (fBalance) {
+            const balance = ingresos - egresos;
+            fBalance.innerText = `$${balance.toLocaleString()}`;
+            fBalance.style.color = balance >= 0 ? '#10b981' : '#ef4444';
+        }
     },
 
     renderUsers() {
@@ -322,6 +354,7 @@ const adminApp = {
         const concept = document.getElementById('account-concept').value;
         const amount = parseFloat(document.getElementById('account-amount').value);
         const client_name = document.getElementById('account-client').value || null;
+        const type = document.getElementById('account-type').value;
         
         const d = new Date();
         const date = `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
@@ -329,7 +362,7 @@ const adminApp = {
         try {
             const { data, error } = await this.supabase
                 .from('accounts')
-                .insert([{ concept, amount, client_name, date }])
+                .insert([{ concept, amount, client_name, date, type }])
                 .select();
                 
             if (error) throw error;
