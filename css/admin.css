@@ -485,3 +485,88 @@ body.admin-body {
         margin-left: 0;
     }
 }
+
+/* Pendientes (Dark Table) */
+.dark-table-container {
+    background-color: #111111;
+    color: #e5e5e5;
+    border: 1px solid #333;
+}
+
+.tasks-table th {
+    background-color: #1a1a1a;
+    color: #888;
+    border-bottom: 1px solid #333;
+    font-weight: 500;
+}
+
+.tasks-table td {
+    border-bottom: 1px solid #222;
+}
+
+.tasks-table tr:hover td {
+    background-color: #1a1a1a;
+}
+
+.task-checkbox {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f59e0b;
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-right: 10px;
+    position: relative;
+}
+
+.task-checkbox:checked {
+    background: #f59e0b;
+}
+
+.task-checkbox:checked::after {
+    content: "✓";
+    color: #111;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.badge-priority {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.priority-Urgente { background: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; }
+.priority-Alta { background: #ffedd5; color: #f97316; border: 1px solid #fdba74; }
+.priority-Media { background: #fef3c7; color: #f59e0b; border: 1px solid #fcd34d; }
+.priority-Baja { background: #e0f2fe; color: #0ea5e9; border: 1px solid #7dd3fc; }
+
+.badge-status {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.status-Pendiente { background: #374151; color: #d1d5db; }
+.status-Trabajando { background: #3b82f6; color: #ffffff; }
+.status-Recurrente { background: #8b5cf6; color: #ffffff; }
+.status-Completado { background: #10b981; color: #ffffff; }
+
+.task-desc {
+    display: flex;
+    align-items: center;
+}
+.task-completed .task-desc-text {
+    text-decoration: line-through;
+    color: #666;
+}

@@ -10,7 +10,8 @@ const adminApp = {
     db: {
         users: [],
         clients: [],
-        accounts: []
+        accounts: [],
+        tasks: []
     },
     currentUser: null,
     supabase: null,
@@ -31,15 +32,17 @@ const adminApp = {
 
     async loadData() {
         try {
-            const [usersRes, clientsRes, accountsRes] = await Promise.all([
+            const [usersRes, clientsRes, accountsRes, tasksRes] = await Promise.all([
                 this.supabase.from('users').select('*').order('id', { ascending: false }),
                 this.supabase.from('clients').select('*').order('id', { ascending: false }),
-                this.supabase.from('accounts').select('*').order('id', { ascending: false })
+                this.supabase.from('accounts').select('*').order('id', { ascending: false }),
+                this.supabase.from('tasks').select('*').order('client_name', { ascending: true })
             ]);
 
             if (usersRes.data) this.db.users = usersRes.data;
             if (clientsRes.data) this.db.clients = clientsRes.data;
             if (accountsRes.data) this.db.accounts = accountsRes.data;
+            if (tasksRes.data) this.db.tasks = tasksRes.data;
         } catch (error) {
             console.error("Error loading data:", error);
             alert("Error al cargar los datos. Verifica tu conexión.");
@@ -170,6 +173,7 @@ const adminApp = {
         this.renderClients();
         this.renderAccounts();
         this.renderUsers();
+        this.renderTasks();
     },
 
     renderDashboardMetrics() {
@@ -209,6 +213,13 @@ const adminApp = {
             select.innerHTML = '<option value="">Ninguno</option>';
             this.db.clients.forEach(c => {
                 select.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+            });
+        }
+        const taskSelect = document.getElementById('task-client');
+        if(taskSelect) {
+            taskSelect.innerHTML = '<option value="">Seleccione un cliente</option>';
+            this.db.clients.forEach(c => {
+                taskSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
             });
         }
     },
@@ -451,6 +462,123 @@ const adminApp = {
             } catch (err) {
                 console.error(err);
                 alert("Error al eliminar usuario");
+            }
+        }
+    },
+
+    renderTasks() {
+        const tbody = document.getElementById('tasks-table-body');
+        if(!tbody) return;
+
+        tbody.innerHTML = '';
+        
+        let lastClient = null;
+
+        this.db.tasks.forEach(t => {
+            const isCompleted = t.completed ? 'checked' : '';
+            const rowClass = t.completed ? 'task-completed' : '';
+            
+            if (t.client_name !== lastClient) {
+                tbody.innerHTML += `
+                    <tr style="background: #111;">
+                        <td colspan="7" style="color: #f59e0b; padding-top: 1.5rem; font-weight: bold; border-bottom: 2px solid #f59e0b; font-size: 0.9rem; text-transform: uppercase;">
+                            ${t.client_name}
+                        </td>
+                    </tr>
+                `;
+                lastClient = t.client_name;
+            }
+
+            tbody.innerHTML += `
+                <tr class="${rowClass}">
+                    <td style="color: transparent; user-select: none;">-</td>
+                    <td style="color: #888;">${t.executor}</td>
+                    <td><span class="badge-priority priority-${t.priority}">${t.priority}</span></td>
+                    <td class="task-desc">
+                        <input type="checkbox" class="task-checkbox" ${isCompleted} onchange="adminApp.toggleTaskStatus(${t.id}, this.checked)">
+                        <span class="task-desc-text">${t.description}</span>
+                    </td>
+                    <td><span class="badge-status status-${t.status}">${t.status}</span></td>
+                    <td style="color: #888;">${t.deadline || 'Sin fecha'}</td>
+                    <td>
+                        <button class="action-btn delete" onclick="adminApp.deleteTask(${t.id})">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+    },
+
+    async saveTask(e) {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalText = btn.innerText;
+        btn.innerText = 'Guardando...';
+        btn.disabled = true;
+
+        const client_name = document.getElementById('task-client').value;
+        const executor = document.getElementById('task-executor').value;
+        const priority = document.getElementById('task-priority').value;
+        const description = document.getElementById('task-desc').value;
+        const status = document.getElementById('task-status').value;
+        const deadline = document.getElementById('task-deadline').value;
+
+        try {
+            const { data, error } = await this.supabase
+                .from('tasks')
+                .insert([{ client_name, executor, priority, description, status, deadline }])
+                .select();
+                
+            if (error) throw error;
+            
+            if (data && data.length > 0) {
+                this.db.tasks.push(data[0]);
+                this.db.tasks.sort((a, b) => a.client_name.localeCompare(b.client_name));
+                this.renderAll();
+            }
+            
+            document.getElementById('form-task').reset();
+            this.closeModal('modal-task');
+        } catch (err) {
+            console.error(err);
+            alert("Error al guardar pendiente");
+        } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+    },
+
+    async toggleTaskStatus(id, isCompleted) {
+        try {
+            const { error } = await this.supabase
+                .from('tasks')
+                .update({ completed: isCompleted })
+                .eq('id', id);
+                
+            if (error) throw error;
+            
+            const task = this.db.tasks.find(t => t.id === id);
+            if(task) task.completed = isCompleted;
+            this.renderTasks();
+        } catch (err) {
+            console.error(err);
+            alert("Error al actualizar pendiente");
+            this.renderTasks();
+        }
+    },
+
+    async deleteTask(id) {
+        if(confirm("¿Eliminar pendiente permanentemente?")) {
+            try {
+                const { error } = await this.supabase.from('tasks').delete().eq('id', id);
+                if (error) throw error;
+                
+                this.db.tasks = this.db.tasks.filter(t => t.id !== id);
+                this.renderAll();
+            } catch (err) {
+                console.error(err);
+                alert("Error al eliminar pendiente");
             }
         }
     }

@@ -68,6 +68,10 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                     Finanzas
                 </button>
+                <button class="nav-item" data-target="view-tasks">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                    Pendientes
+                </button>
                 <button class="nav-item" data-target="view-users">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     Usuarios
@@ -186,6 +190,36 @@
                             </tr>
                         </thead>
                         <tbody id="accounts-table-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- VIEW: PENDIENTES -->
+            <div id="view-tasks" class="content-view">
+                <header class="content-header flex-between">
+                    <div>
+                        <h1>Pendientes de Equipo</h1>
+                        <p>Gestión avanzada de tareas por cliente.</p>
+                    </div>
+                    <button class="btn btn-warning" style="background-color: #f59e0b; color: #111; border: none;" onclick="adminApp.openModal('modal-task')">+ Añadir Pendiente Manual</button>
+                </header>
+                
+                <div class="card-glass table-container dark-table-container">
+                    <table class="data-table tasks-table">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Ejecutor</th>
+                                <th>Prioridad</th>
+                                <th>Pendiente</th>
+                                <th>Status</th>
+                                <th>Fecha de Corte</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tasks-table-body">
                             <!-- Populated by JS -->
                         </tbody>
                     </table>
@@ -326,6 +360,59 @@
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="adminApp.closeModal('modal-user')">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Pendiente -->
+    <div class="modal-overlay" id="modal-task">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Añadir Pendiente</h3>
+                <button class="close-btn" onclick="adminApp.closeModal('modal-task')">&times;</button>
+            </div>
+            <form id="form-task" onsubmit="adminApp.saveTask(event)">
+                <div class="form-group">
+                    <label>Cliente Asociado</label>
+                    <select id="task-client" required>
+                        <option value="">Seleccione un cliente</option>
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Ejecutor</label>
+                    <input type="text" id="task-executor" required placeholder="Ej. Daniel">
+                </div>
+                <div class="form-group">
+                    <label>Prioridad</label>
+                    <select id="task-priority" required>
+                        <option value="Urgente">Urgente</option>
+                        <option value="Alta">Alta</option>
+                        <option value="Media" selected>Media</option>
+                        <option value="Baja">Baja</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Descripción del Pendiente</label>
+                    <input type="text" id="task-desc" required placeholder="Ej. Grabar video">
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="task-status" required>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Trabajando">Trabajando</option>
+                        <option value="Recurrente">Recurrente</option>
+                        <option value="Completado">Completado</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Fecha de Corte</label>
+                    <input type="date" id="task-deadline">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="adminApp.closeModal('modal-task')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #f59e0b; color: #111; border: none;">Guardar</button>
                 </div>
             </form>
         </div>
