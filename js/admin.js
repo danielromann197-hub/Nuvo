@@ -5,7 +5,6 @@
 
 const supabaseUrl = 'https://pgsmwsuwapjajszhwaps.supabase.co';
 const supabaseKey = 'sb_publishable_O6sgosXbiPAiCvmtsCdB0A_tHg-YgI8';
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 const adminApp = {
     db: {
@@ -14,18 +13,28 @@ const adminApp = {
         accounts: []
     },
     currentUser: null,
+    supabase: null,
 
     async init() {
         this.bindEvents();
-        await this.checkAuth();
+        try {
+            if (!window.supabase) {
+                throw new Error("No se pudo cargar la librería de Supabase (Posible bloqueo por AdBlock o Firewall).");
+            }
+            this.supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+            await this.checkAuth();
+        } catch (err) {
+            console.error("Error crítico de inicialización:", err);
+            alert("Error crítico: " + err.message);
+        }
     },
 
     async loadData() {
         try {
             const [usersRes, clientsRes, accountsRes] = await Promise.all([
-                supabase.from('users').select('*').order('id', { ascending: false }),
-                supabase.from('clients').select('*').order('id', { ascending: false }),
-                supabase.from('accounts').select('*').order('id', { ascending: false })
+                this.supabase.from('users').select('*').order('id', { ascending: false }),
+                this.supabase.from('clients').select('*').order('id', { ascending: false }),
+                this.supabase.from('accounts').select('*').order('id', { ascending: false })
             ]);
 
             if (usersRes.data) this.db.users = usersRes.data;
@@ -43,13 +52,8 @@ const adminApp = {
             this.currentUser = JSON.parse(sessionUser);
             this.showDashboard();
             
-            // Show loading indicator in dashboard
             document.getElementById('current-username').innerText = "Cargando...";
-            
-            // Fetch all data from Supabase
             await this.loadData();
-            
-            // Update UI
             this.updateDashboardUser();
             this.renderAll();
         } else {
@@ -63,63 +67,73 @@ const adminApp = {
     },
 
     bindEvents() {
-        // Login Form
-        document.getElementById('login-form')?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button[type="submit"]');
-            const originalText = btn.innerText;
-            btn.innerText = 'Validando...';
-            btn.disabled = true;
-
-            const u = document.getElementById('username').value.trim();
-            const p = document.getElementById('password').value.trim();
-            
-            try {
-                // Query Supabase for user
-                const { data, error } = await supabase
-                    .from('users')
-                    .select('*')
-                    .eq('username', u)
-                    .eq('password', p)
-                    .single();
-
-                if (error) {
-                    console.error("Supabase Error:", error);
-                    alert("Error en base de datos: " + error.message);
-                    throw error;
+        const loginForm = document.getElementById('login-form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                if (!this.supabase) {
+                    alert("Error: Supabase no está conectado.");
+                    return;
                 }
 
-                if (data) {
-                    sessionStorage.setItem('nuvo_auth', JSON.stringify(data));
-                    this.currentUser = data;
-                    document.getElementById('login-form').reset();
-                    document.getElementById('login-error').innerText = "";
-                    this.showDashboard();
-                    
-                    document.getElementById('current-username').innerText = "Cargando...";
-                    await this.loadData();
-                    this.updateDashboardUser();
-                    this.renderAll();
-                } else {
-                    document.getElementById('login-error').innerText = "Usuario o contraseña incorrectos.";
-                }
-            } catch (err) {
-                console.error(err);
-                document.getElementById('login-error').innerText = "Usuario o contraseña incorrectos.";
-            } finally {
-                btn.innerText = originalText;
-                btn.disabled = false;
-            }
-        });
+                const btn = e.target.querySelector('button[type="submit"]');
+                const originalText = btn.innerText;
+                btn.innerText = 'Validando...';
+                btn.disabled = true;
 
-        // Logout
+                const uElement = document.getElementById('username');
+                const pElement = document.getElementById('password');
+                
+                const u = uElement ? uElement.value.trim() : '';
+                const p = pElement ? pElement.value.trim() : '';
+                
+                try {
+                    const { data, error } = await this.supabase
+                        .from('users')
+                        .select('*')
+                        .eq('username', u)
+                        .eq('password', p)
+                        .single();
+
+                    if (error) {
+                        console.error("Supabase Error:", error);
+                        document.getElementById('login-error').innerText = "Credenciales incorrectas o error de conexión.";
+                        return;
+                    }
+
+                    if (data) {
+                        sessionStorage.setItem('nuvo_auth', JSON.stringify(data));
+                        this.currentUser = data;
+                        document.getElementById('login-form').reset();
+                        document.getElementById('login-error').innerText = "";
+                        this.showDashboard();
+                        
+                        document.getElementById('current-username').innerText = "Cargando...";
+                        await this.loadData();
+                        this.updateDashboardUser();
+                        this.renderAll();
+                    } else {
+                        document.getElementById('login-error').innerText = "Usuario o contraseña incorrectos.";
+                    }
+                } catch (err) {
+                    console.error(err);
+                    document.getElementById('login-error').innerText = "Error inesperado al intentar iniciar sesión.";
+                } finally {
+                    if (btn) {
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                    }
+                }
+            });
+        }
+
         document.getElementById('logout-btn')?.addEventListener('click', () => {
             sessionStorage.removeItem('nuvo_auth');
             this.currentUser = null;
             this.showLogin();
         });
 
-        // Navigation
         document.querySelectorAll('.nav-item').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const target = e.currentTarget.getAttribute('data-target');
@@ -139,17 +153,16 @@ const adminApp = {
     },
 
     switchView(viewId) {
-        // Update nav buttons
         document.querySelectorAll('.nav-item').forEach(btn => {
             btn.classList.remove('active');
             if(btn.getAttribute('data-target') === viewId) btn.classList.add('active');
         });
 
-        // Update views
         document.querySelectorAll('.content-view').forEach(view => {
             view.classList.remove('active');
         });
-        document.getElementById(viewId).classList.add('active');
+        const viewEl = document.getElementById(viewId);
+        if(viewEl) viewEl.classList.add('active');
     },
 
     renderAll() {
@@ -188,7 +201,6 @@ const adminApp = {
             `;
         });
         
-        // Update select options in accounts
         const select = document.getElementById('account-client');
         if(select) {
             select.innerHTML = '<option value="">Ninguno</option>';
@@ -242,16 +254,14 @@ const adminApp = {
         });
     },
 
-    // Modals
     openModal(id) {
-        document.getElementById(id).classList.add('active');
+        document.getElementById(id)?.classList.add('active');
     },
 
     closeModal(id) {
-        document.getElementById(id).classList.remove('active');
+        document.getElementById(id)?.classList.remove('active');
     },
 
-    // CRUD Clients
     async saveClient(e) {
         e.preventDefault();
         const btn = e.target.querySelector('button[type="submit"]');
@@ -264,16 +274,15 @@ const adminApp = {
         const status = document.getElementById('client-status').value;
 
         try {
-            const { data, error } = await supabase
+            const { data, error } = await this.supabase
                 .from('clients')
                 .insert([{ name, service, status }])
                 .select();
                 
             if (error) throw error;
             
-            // Add to local array and re-render
             if (data && data.length > 0) {
-                this.db.clients.unshift(data[0]); // Add to beginning
+                this.db.clients.unshift(data[0]);
                 this.renderAll();
             }
             
@@ -291,7 +300,7 @@ const adminApp = {
     async deleteClient(id) {
         if(confirm("¿Eliminar cliente permanentemente?")) {
             try {
-                const { error } = await supabase.from('clients').delete().eq('id', id);
+                const { error } = await this.supabase.from('clients').delete().eq('id', id);
                 if (error) throw error;
                 
                 this.db.clients = this.db.clients.filter(c => c.id !== id);
@@ -303,7 +312,6 @@ const adminApp = {
         }
     },
 
-    // CRUD Accounts
     async saveAccount(e) {
         e.preventDefault();
         const btn = e.target.querySelector('button[type="submit"]');
@@ -319,7 +327,7 @@ const adminApp = {
         const date = `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
 
         try {
-            const { data, error } = await supabase
+            const { data, error } = await this.supabase
                 .from('accounts')
                 .insert([{ concept, amount, client_name, date }])
                 .select();
@@ -345,7 +353,7 @@ const adminApp = {
     async deleteAccount(id) {
         if(confirm("¿Eliminar registro permanentemente?")) {
             try {
-                const { error } = await supabase.from('accounts').delete().eq('id', id);
+                const { error } = await this.supabase.from('accounts').delete().eq('id', id);
                 if (error) throw error;
                 
                 this.db.accounts = this.db.accounts.filter(a => a.id !== id);
@@ -357,7 +365,6 @@ const adminApp = {
         }
     },
 
-    // CRUD Users
     async saveUser(e) {
         e.preventDefault();
         const btn = e.target.querySelector('button[type="submit"]');
@@ -369,7 +376,6 @@ const adminApp = {
         const password = document.getElementById('user-password').value;
         const role = document.getElementById('user-role').value;
 
-        // Check if exists locally first
         if(this.db.users.find(u => u.username === username)) {
             alert("El usuario ya existe");
             btn.innerText = originalText;
@@ -378,7 +384,7 @@ const adminApp = {
         }
 
         try {
-            const { data, error } = await supabase
+            const { data, error } = await this.supabase
                 .from('users')
                 .insert([{ username, password, role }])
                 .select();
@@ -404,7 +410,7 @@ const adminApp = {
     async deleteUser(id) {
         if(confirm("¿Eliminar usuario permanentemente?")) {
             try {
-                const { error } = await supabase.from('users').delete().eq('id', id);
+                const { error } = await this.supabase.from('users').delete().eq('id', id);
                 if (error) throw error;
                 
                 this.db.users = this.db.users.filter(u => u.id !== id);
@@ -417,7 +423,6 @@ const adminApp = {
     }
 };
 
-// Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     adminApp.init();
 });
