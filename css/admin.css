@@ -486,28 +486,7 @@ body.admin-body {
     }
 }
 
-/* Pendientes (Dark Table) */
-.dark-table-container {
-    background-color: #111111;
-    color: #e5e5e5;
-    border: 1px solid #333;
-}
-
-.tasks-table th {
-    background-color: #1a1a1a;
-    color: #888;
-    border-bottom: 1px solid #333;
-    font-weight: 500;
-}
-
-.tasks-table td {
-    border-bottom: 1px solid #222;
-}
-
-.tasks-table tr:hover td {
-    background-color: #1a1a1a;
-}
-
+/* Pendientes Checkbox and Badges */
 .task-checkbox {
     appearance: none;
     width: 20px;
@@ -557,10 +536,10 @@ body.admin-body {
     display: inline-block;
 }
 
-.status-Pendiente { background: #374151; color: #d1d5db; }
-.status-Trabajando { background: #3b82f6; color: #ffffff; }
-.status-Recurrente { background: #8b5cf6; color: #ffffff; }
-.status-Completado { background: #10b981; color: #ffffff; }
+.status-Pendiente { background: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb; }
+.status-Trabajando { background: #eff6ff; color: #3b82f6; border: 1px solid #bfdbfe; }
+.status-Recurrente { background: #f5f3ff; color: #8b5cf6; border: 1px solid #ddd6fe; }
+.status-Completado { background: #ecfdf5; color: #10b981; border: 1px solid #a7f3d0; }
 
 .task-desc {
     display: flex;
@@ -568,13 +547,16 @@ body.admin-body {
 }
 .task-completed .task-desc-text {
     text-decoration: line-through;
-    color: #666;
+    color: var(--text-muted);
 }
 
-/* Task Filters */
+/* Task Filters (Light Theme) */
 .task-filters-container {
-    background-color: #111111;
-    border: 1px solid #333;
+    background: var(--bg-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: var(--shadow-md);
     border-top-left-radius: var(--radius-sm);
     border-top-right-radius: var(--radius-sm);
     padding: var(--space-md);
@@ -595,15 +577,16 @@ body.admin-body {
 }
 
 .filter-group label {
-    font-size: 0.8rem;
-    color: #888;
-    margin-bottom: 0.3rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.4rem;
+    font-weight: 500;
 }
 
 .filter-group input, .filter-group select {
-    background-color: #1a1a1a;
-    border: 1px solid #333;
-    color: #e5e5e5;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-strong);
+    color: var(--text-primary);
     padding: 0.6rem 1rem;
     border-radius: var(--radius-sm);
     font-family: var(--font-body);
@@ -612,6 +595,7 @@ body.admin-body {
 .filter-group input:focus, .filter-group select:focus {
     border-color: #6C63FF;
     outline: none;
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
 }
 
 .filter-actions {
@@ -620,9 +604,9 @@ body.admin-body {
 }
 
 .view-btn {
-    background-color: #1a1a1a;
-    border: 1px solid #333;
-    color: #888;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-strong);
+    color: var(--text-secondary);
     padding: 0.6rem;
     border-radius: var(--radius-sm);
     cursor: pointer;
@@ -633,21 +617,22 @@ body.admin-body {
 }
 
 .view-btn:hover, .view-btn.active {
-    background-color: #333;
-    color: #e5e5e5;
+    background-color: var(--bg-secondary);
+    color: #6C63FF;
+    border-color: #6C63FF;
 }
 
 .task-tabs {
     display: flex;
     gap: 0;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid var(--border-strong);
     margin-top: var(--space-sm);
 }
 
 .task-tab {
     background: transparent;
     border: none;
-    color: #888;
+    color: var(--text-secondary);
     padding: 0.8rem 1.5rem;
     cursor: pointer;
     font-weight: 500;
@@ -657,17 +642,10 @@ body.admin-body {
 }
 
 .task-tab:hover {
-    color: #e5e5e5;
+    color: var(--text-primary);
 }
 
 .task-tab.active {
     color: #6C63FF;
     border-bottom: 2px solid #6C63FF;
-}
-
-/* Ensure table container has no border top if below tabs */
-.dark-table-container {
-    border-top: none;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
 }

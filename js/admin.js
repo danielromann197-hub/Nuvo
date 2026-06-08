@@ -480,8 +480,8 @@ const adminApp = {
             
             if (t.client_name !== lastClient) {
                 tbody.innerHTML += `
-                    <tr style="background: #111;">
-                        <td colspan="7" style="color: #f59e0b; padding-top: 1.5rem; font-weight: bold; border-bottom: 2px solid #f59e0b; font-size: 0.9rem; text-transform: uppercase;">
+                    <tr style="background: var(--bg-secondary);">
+                        <td colspan="7" style="color: #6C63FF; padding-top: 1.5rem; font-weight: bold; border-bottom: 2px solid #6C63FF; font-size: 0.9rem; text-transform: uppercase;">
                             ${t.client_name}
                         </td>
                     </tr>
@@ -492,14 +492,14 @@ const adminApp = {
             tbody.innerHTML += `
                 <tr class="${rowClass}">
                     <td style="color: transparent; user-select: none;">-</td>
-                    <td style="color: #888;">${t.executor}</td>
+                    <td style="color: var(--text-secondary);">${t.executor}</td>
                     <td><span class="badge-priority priority-${t.priority}">${t.priority}</span></td>
                     <td class="task-desc">
                         <input type="checkbox" class="task-checkbox" ${isCompleted} onchange="adminApp.toggleTaskStatus(${t.id}, this.checked)">
                         <span class="task-desc-text">${t.description}</span>
                     </td>
                     <td><span class="badge-status status-${t.status}">${t.status}</span></td>
-                    <td style="color: #888;">${t.deadline || 'Sin fecha'}</td>
+                    <td style="color: var(--text-secondary);">${t.deadline || 'Sin fecha'}</td>
                     <td>
                         <button class="action-btn delete" onclick="adminApp.deleteTask(${t.id})">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
