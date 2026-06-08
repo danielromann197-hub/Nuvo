@@ -203,8 +203,35 @@
                         <h1>Pendientes de Equipo</h1>
                         <p>Gestión avanzada de tareas por cliente.</p>
                     </div>
-                    <button class="btn btn-warning" style="background-color: #f59e0b; color: #111; border: none;" onclick="adminApp.openModal('modal-task')">+ Añadir Pendiente Manual</button>
+                    <button class="btn btn-primary" onclick="adminApp.openModal('modal-task')">+ Añadir Pendiente Manual</button>
                 </header>
+
+                <div class="task-filters-container">
+                    <div class="task-filters-top">
+                        <div class="filter-group">
+                            <label>Buscar Cliente</label>
+                            <input type="text" id="filter-search" placeholder="🔍 Buscar por cliente o pendiente...">
+                        </div>
+                        <div class="filter-group">
+                            <label>Ejecutor</label>
+                            <select id="filter-executor">
+                                <option value="">🔍 Todos los Ejecutores</option>
+                            </select>
+                        </div>
+                        <div class="filter-actions">
+                            <button class="view-btn active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg></button>
+                            <button class="view-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></button>
+                        </div>
+                    </div>
+                    
+                    <div class="task-tabs">
+                        <button class="task-tab active">Todos</button>
+                        <button class="task-tab">Contenido</button>
+                        <button class="task-tab">Ads</button>
+                        <button class="task-tab">Web</button>
+                        <button class="task-tab">General</button>
+                    </div>
+                </div>
                 
                 <div class="card-glass table-container dark-table-container">
                     <table class="data-table tasks-table">
@@ -412,7 +439,7 @@
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="adminApp.closeModal('modal-task')">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" style="background-color: #f59e0b; color: #111; border: none;">Guardar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
         </div>

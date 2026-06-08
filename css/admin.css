@@ -512,7 +512,7 @@ body.admin-body {
     appearance: none;
     width: 20px;
     height: 20px;
-    border: 2px solid #f59e0b;
+    border: 2px solid #6C63FF;
     border-radius: 4px;
     background: transparent;
     cursor: pointer;
@@ -522,12 +522,12 @@ body.admin-body {
 }
 
 .task-checkbox:checked {
-    background: #f59e0b;
+    background: #6C63FF;
 }
 
 .task-checkbox:checked::after {
     content: "✓";
-    color: #111;
+    color: #FFF;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -569,4 +569,105 @@ body.admin-body {
 .task-completed .task-desc-text {
     text-decoration: line-through;
     color: #666;
+}
+
+/* Task Filters */
+.task-filters-container {
+    background-color: #111111;
+    border: 1px solid #333;
+    border-top-left-radius: var(--radius-sm);
+    border-top-right-radius: var(--radius-sm);
+    padding: var(--space-md);
+    margin-bottom: 0;
+}
+
+.task-filters-top {
+    display: flex;
+    gap: var(--space-md);
+    align-items: flex-end;
+    margin-bottom: var(--space-md);
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.filter-group label {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 0.3rem;
+}
+
+.filter-group input, .filter-group select {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    color: #e5e5e5;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+}
+
+.filter-group input:focus, .filter-group select:focus {
+    border-color: #6C63FF;
+    outline: none;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.view-btn {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    color: #888;
+    padding: 0.6rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.view-btn:hover, .view-btn.active {
+    background-color: #333;
+    color: #e5e5e5;
+}
+
+.task-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid #333;
+    margin-top: var(--space-sm);
+}
+
+.task-tab {
+    background: transparent;
+    border: none;
+    color: #888;
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    font-family: var(--font-body);
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+}
+
+.task-tab:hover {
+    color: #e5e5e5;
+}
+
+.task-tab.active {
+    color: #6C63FF;
+    border-bottom: 2px solid #6C63FF;
+}
+
+/* Ensure table container has no border top if below tabs */
+.dark-table-container {
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
