@@ -99,6 +99,36 @@
   color: var(--text-primary);
 }
 
+.premium-card ul li span {
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+/* CTA Box */
+.cta-box {
+  background-color: #F8F9FA;
+  border-radius: 32px;
+  padding: clamp(var(--space-xl), 8vw, var(--space-2xl)) clamp(var(--space-md), 5vw, var(--space-xl));
+  margin: 0 auto;
+}
+
+.cta-box h2 {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+  color: #111111;
+  letter-spacing: -0.02em;
+}
+
+.cta-box p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin-inline: auto;
+  margin-bottom: var(--space-md);
+  line-height: 1.6;
+}
+
 .premium-card p {
   font-size: 1.1rem;
   color: var(--text-secondary);
